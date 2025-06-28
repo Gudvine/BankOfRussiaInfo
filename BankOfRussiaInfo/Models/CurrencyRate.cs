@@ -1,3 +1,5 @@
+using System;
+
 namespace BankOfRussiaInfo
 {
     public class CurrancyRate
@@ -15,6 +17,11 @@ namespace BankOfRussiaInfo
         /// <summary>
         /// Котировака валюты
         /// </summary>
-        public decimal CurrancyRate { get; set; }
+        public decimal RateValue { get; set; }
+
+        /// <summary>
+        /// Дата котировки
+        /// </summary>
+        public DateTime RateDate { get; set; }
     }
 }

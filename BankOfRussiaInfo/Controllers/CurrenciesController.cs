@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BankOfRussiaInfo.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace BankOfRussiaInfo.Controllers
 {
@@ -17,9 +20,17 @@ namespace BankOfRussiaInfo.Controllers
         /// <param name="currencyCode">Код валюты (если не передан, то список всех валют)</param>
         /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public IActionResult GetRates([FromQuery] string rateDate, [FromQuery] string currencyCode)
         {
-            return Ok();
+            return Ok(new CommonResponse()
+            {
+                Date = DateTime.Today,
+                Status = "Статус",
+                Data = Enumerable.Empty<CurrancyRate>().ToList()
+
+            });
         }
     }
 }
