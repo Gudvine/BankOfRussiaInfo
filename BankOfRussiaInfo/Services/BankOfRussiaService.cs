@@ -12,11 +12,16 @@ namespace BankOfRussiaInfo.Services
         /// <summary>
         /// Базовый адрес для запросов к API Банка России
         /// </summary>
-        private const string _cbrBaseAddress = "";
+        private const string _cbrBaseAddress = "https://cbr.ru/scripts";
 
         public BankOfRussiaService(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
+        }
+
+        public List<CurrancyRate> GetCurrancyRates()
+        {
+            //var client = _httpClientFactory.Cre
         }
     }
 }
