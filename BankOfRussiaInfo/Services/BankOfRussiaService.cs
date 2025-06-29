@@ -30,15 +30,19 @@ namespace BankOfRussiaInfo.Services
             var client = _httpClientFactory.CreateClient();
             client.BaseAddress = new Uri(_cbrBaseAddress);
 
+            string dateReq;
+
             // формат параметра для апи ЦБ (req_date=dd/MM/yyyy)
-            var dateReq = date.Value.ToString("dd/MM/yyyy") ?? DateTime.Today.ToString("dd/MM/yyyy");
+            if (date.HasValue)
+                dateReq = date.Value.ToString("dd/MM/yyyy");
+            else
+                dateReq = DateTime.Today.ToString("dd/MM/yyyy");
 
             var response = await client.GetAsync($"XML_daily.asp?date_req={dateReq}");
 
             if (!response.IsSuccessStatusCode)
                 throw new Exception("Не удоалось получить данные с ЦБ России");
 
-            response.Content.Headers.ContentType.CharSet = "windows-1251";
             var xmlContent = await response.Content.ReadAsStringAsync();
 
             var rates = ParseBankXmlContentFromString(xmlContent);

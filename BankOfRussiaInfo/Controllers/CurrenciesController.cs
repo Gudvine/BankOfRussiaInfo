@@ -32,11 +32,9 @@ namespace BankOfRussiaInfo.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult<CommonResponse<List<CurrancyRate>>>> GetRates([FromQuery] string rateDate, [FromQuery] string currencyCode)
+        public async Task<ActionResult<CommonResponse<List<CurrancyRate>>>> GetRates([FromQuery] DateTime? rateDate, [FromQuery] string currencyCode)
         {
-            var date = DateTime.Parse(rateDate).ToUniversalTime();
-
-            var rates = await _bankOfRussiaService.GetCurrancyRatesAsync(date, currencyCode);
+            var rates = await _bankOfRussiaService.GetCurrancyRatesAsync(rateDate, currencyCode);
 
             if (rates.Count <= 0)
                 return NoContent();
