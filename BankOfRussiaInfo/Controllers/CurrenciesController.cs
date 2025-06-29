@@ -1,8 +1,11 @@
 ﻿using BankOfRussiaInfo.Models;
+using BankOfRussiaInfo.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace BankOfRussiaInfo.Controllers
 {
@@ -13,6 +16,13 @@ namespace BankOfRussiaInfo.Controllers
     [Route("[controller]/[action]")]
     public class CurrenciesController : ControllerBase
     {
+        private readonly BankOfRussiaService _bankOfRussiaService;
+
+        public CurrenciesController(BankOfRussiaService bankOfRussiaService)
+        {
+            _bankOfRussiaService = bankOfRussiaService;
+        }
+
         /// <summary>
         /// Получить курсы валют
         /// </summary>
@@ -22,14 +32,19 @@ namespace BankOfRussiaInfo.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public IActionResult GetRates([FromQuery] string rateDate, [FromQuery] string currencyCode)
+        public async Task<ActionResult<CommonResponse<List<CurrancyRate>>>> GetRates([FromQuery] string rateDate, [FromQuery] string currencyCode)
         {
-            return Ok(new CommonResponse()
-            {
-                Date = DateTime.Today,
-                Status = "Статус",
-                Data = Enumerable.Empty<CurrancyRate>().ToList()
+            var date = DateTime.Parse(rateDate).ToUniversalTime();
 
+            var rates = await _bankOfRussiaService.GetCurrancyRatesAsync(date, currencyCode);
+
+            if (rates.Count <= 0)
+                return NoContent();
+
+            return Ok(new CommonResponse<List<CurrancyRate>>()
+            {
+                Status = "Успешно",
+                Data = rates
             });
         }
     }
